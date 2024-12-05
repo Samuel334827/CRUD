@@ -9,6 +9,9 @@ var productInputimage = document.getElementById('productimage');
 var search = document.getElementById('search');
 var rowda=document.getElementById('rowData');
 
+var addBtn=document.getElementById('add');
+var updateBtn=document.getElementById('update');
+
 
 
 var products;
@@ -26,6 +29,7 @@ function addproduct() {
         category:productInputcategory.value,
         description:productInputdescription.value,
         image:productInputimage.files[0]?.name,
+        productIndex:'0',
     }
     console.log(product);
     products.push(product);
@@ -50,7 +54,7 @@ function display(arr){
         <div class="card">
             <img src="${'images/' + (arr[i].image || 'place.png')}" class="card-img-top" alt="one">
             <div class="card-body text-center">
-                <span>index</span>
+                <span>${arr[i].productIndex=i+1}</span>
                 <h5 class="card-title">${arr[i].name}</h5>
                 <p class="card-text">${arr[i].price}</p>
                 <p class="card-text">${arr[i].category}</p>
@@ -58,7 +62,7 @@ function display(arr){
             </div>
             <div class="card-footer text-center">
                 <div onclick="deleteItem(${i})" class="btn btn-outline-danger">Delete</div>
-                <div class="btn btn-outline-success">Edit item</div>
+                <div onclick="editProduct(${i})" class="btn btn-outline-success">Edit item</div>
             </div>
         </div>
         </div>`
@@ -82,10 +86,31 @@ function searchproduct(){
     }
     display(searchArr);
 }
+var global;
+function editProduct(updatedindex){
+    global=updatedindex;
+    productInputName.value= products[updatedindex].name;
+    productInputprice.value= products[updatedindex].price;
+    productInputcategory.value= products[updatedindex].category;
+    productInputdescription.value= products[updatedindex].description;
+    
+    
+    updateBtn.classList.remove('d-none');
+    addBtn.classList.add('d-none');
+}
 
-
-
-
+function update(){
+    
+    products[global].name = productInputName.value;
+    products[global].price = productInputprice.value;
+    products[global].category = productInputcategory.value;
+    products[global].description = productInputdescription.value;
+    localStorage.setItem('products',JSON.stringify(products))
+    display(products);
+    clearForm();
+    updateBtn.classList.add('d-none');
+    addBtn.classList.remove('d-none');
+}
 
 
 
